@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Attendance Calculator</string>
+    <string name="share">Share</string>
+    <string name="rate_us">Rate us!</string>
+    <string name="header">Enter All the Three Fields:</string>
+    <string name="classes_conducted">Classes Conducted</string>
+    <string name="desired_percentage">Desired Percentage</string>
+    <string name="classes_attended">Classes Attended</string>
+    <string name="reset">RESET</string>
+    <string name="calculate">CALCULATE</string>
+    <string name="result_percent">Your attendance percentage is %.2f</string>
+    <string name="result_attend">You need to attend %d Classes!</string>
+    <string name="result_bunk">You may bunk %d Classes!</string>
+    <string name="errorInput">Please enter all the three fields!</string>
+    <string name="errorNumber">Classes attended is more than Classes conducted!</string>
+    <string name="errorpercent">Desired Percentage must be between 0 and 100!</string>
+    <string name="errorHundred">You can not achieve 100.00% attendance\nEven if you have not attended 1 or more classes!</string>
+</resources>
