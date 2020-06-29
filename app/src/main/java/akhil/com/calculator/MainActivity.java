@@ -1,5 +1,9 @@
 package akhil.com.calculator;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.text.DecimalFormat;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
@@ -49,9 +54,10 @@ public class MainActivity extends AppCompatActivity {
         CalculateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String classAttended=Classes_Attended.getEditText().getText().toString().trim();
-                String classConducted=Classes_Conducted.getEditText().getText().toString().trim();
-                String desiredPercentage=Desired_Percentage.getEditText().getText().toString().trim();
+                hideKeyboard(view);
+                String classAttended= Objects.requireNonNull(Classes_Attended.getEditText()).getText().toString().trim();
+                String classConducted= Objects.requireNonNull(Classes_Conducted.getEditText()).getText().toString().trim();
+                String desiredPercentage= Objects.requireNonNull(Desired_Percentage.getEditText()).getText().toString().trim();
                 int classattended,classconducted,desiredpercentage;
                 if(classAttended.isEmpty()||classConducted.isEmpty()||desiredPercentage.isEmpty())
                 {
@@ -69,36 +75,46 @@ public class MainActivity extends AppCompatActivity {
                     double y=0;
                     double d=0;
                     if(classattended<=classconducted&&desiredpercentage<100&&desiredpercentage>0) {
-                        result.setText(String.format(getString(R.string.result_percent), percent));
-                        if(percent==desiredpercentage){
+                        if (classattended > 5000000 || classconducted > 5000000) {
+                            result.setText(getString(R.string.sizeError));
                             result2.setText(null);
                         }
+                        else {
+                            result.setText(String.format(getString(R.string.result_percent), percent));
+                            if(percent==desiredpercentage){
+                                result2.setText(null);
+                            }
 
-                        if (percent>desiredpercentage){
-                            int i;
-                            d = ((double) classattended/ (double) classconducted) * 100;
-                            float z=(float)desiredpercentage;
-                            for (i = 1; d >desiredpercentage; i++) {
-                                if(Math.ceil(d)==desiredpercentage)
-                                    break;
-                                    d = ((double) (classattended)/ (double) (classconducted + i)) * 100;
-                                bunk = i;
-                                if(Math.ceil(d)==desiredpercentage)
-                                break;
+                            if (percent > desiredpercentage) {
+                                int i;
+                                d = ((double) classattended / (double) classconducted) * 100;
+                                double z = (double) desiredpercentage;
+                                for (i = 0; d > desiredpercentage; i++) {
+                                    if (Math.ceil(d) == desiredpercentage)
+                                        break;
+                                    d = ((double) (classattended) / (double) (classconducted + i)) * 100;
+                                    bunk = i;
+                                    if (d < desiredpercentage) {
+                                        bunk = bunk - 1;
+                                        break;
+                                    }
+                                    if (Math.ceil(d) == desiredpercentage)
+                                        break;
+                                }
+                                result2.setText(String.format(getString(R.string.result_bunk), bunk));
                             }
-                            result2.setText(String.format(getString(R.string.result_bunk),bunk));
-                        }
-                        if(percent<desiredpercentage){
-                            int i;
-                            for (i = 1; y <=desiredpercentage; i++) {
-                                if(y==desiredpercentage)
-                                    break;
-                                y = ((double)(classattended + i )/ (double) (classconducted + i)) * 100;
-                                attend = i;
-                                if(y==desiredpercentage)
-                                    break;
+                            if (percent < desiredpercentage) {
+                                int i;
+                                for (i = 0; y <= desiredpercentage; i++) {
+                                    if (y == desiredpercentage)
+                                        break;
+                                    y = ((double) (classattended + i) / (double) (classconducted + i)) * 100;
+                                    attend = i;
+                                    if (y == desiredpercentage)
+                                        break;
+                                }
+                                result2.setText(String.format(getString(R.string.result_attend), attend));
                             }
-                            result2.setText(String.format(getString(R.string.result_attend),attend));
                         }
                     }
                     else {
@@ -128,9 +144,9 @@ public class MainActivity extends AppCompatActivity {
         ResetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Classes_Attended.getEditText().getText().clear();
-                Classes_Conducted.getEditText().getText().clear();
-                Desired_Percentage.getEditText().getText().clear();
+                Objects.requireNonNull(Classes_Attended.getEditText()).getText().clear();
+                Objects.requireNonNull(Classes_Conducted.getEditText()).getText().clear();
+                Objects.requireNonNull(Desired_Percentage.getEditText()).getText().clear();
                 Classes_Attended.requestFocus();
             }
         });
@@ -138,8 +154,13 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.Activity_Main).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                View focusedView = getCurrentFocus();
+                if (v != null && focusedView != null) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                    if (imm != null) {
+                        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                    }
+                }
                 return true;
             }
         });
@@ -155,11 +176,28 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id=item.getItemId();
         switch (id){
-            case R.id.setting_id:
-                break;
+            /*case R.id.setting_id:
+                break;*/
             case R.id.rate_id:
-                break;
+                Uri uriUrl = Uri.parse("http://play.google.com/store/apps/details?id="+getPackageName());
+                Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+                startActivity(launchBrowser);
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    /*public void rateMe(View v) {
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("market://details?id=" + getPackageName())));
+        } catch (ActivityNotFoundException e) {
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://play.google.com/store/apps/details?id=" + getPackageName())));
+        }
+    }*/
 }
