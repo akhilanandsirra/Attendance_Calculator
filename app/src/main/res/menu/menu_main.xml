@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
+    <!--<item
         android:id="@+id/setting_id"
         android:title="@string/share"
         android:fontFamily="@font/roboto"
-        />
+        />-->
     <item
         android:id="@+id/rate_id"
         android:title="@string/rate_us"

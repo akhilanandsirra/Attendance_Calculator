@@ -15,4 +15,6 @@
     <string name="errorNumber">Classes attended is more than Classes conducted!</string>
     <string name="errorpercent">Desired Percentage must be between 0 and 100!</string>
     <string name="errorHundred">You can not achieve 100.00% attendance\nEven if you have not attended 1 or more classes!</string>
+    <string name="sizeError">You don\'t have over a million classes</string>
+    <string name="errorHeld">Classes Held can\'t be zero!</string>
 </resources>

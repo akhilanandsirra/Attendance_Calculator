@@ -64,6 +64,10 @@ public class MainActivity extends AppCompatActivity {
                     result.setText(getString(R.string.errorInput));
                     result2.setText(null);
                 }
+                else if (classConducted.equals("0")) {
+                    result.setText(getString(R.string.errorHeld));
+                    result2.setText(null);
+                }
                 else
                 {
                     classattended=Integer.parseInt(classAttended);
